@@ -33,7 +33,7 @@ E = cv2.equalizeHist(Y)
 
 _, Threshold = cv2.threshold(E, 248, 255, cv2.THRESH_BINARY)
 G = cv2.cvtColor(I, cv2.COLOR_BGR2GRAY)
-G = cv2.medianBlur(G, 15)
+G = cv2.medianBlur(G, 19)
 
 circles = cv2.HoughCircles(G, cv2.HOUGH_GRADIENT, 1, 50, param1=50, param2=30, minRadius=0, maxRadius=0)
 
