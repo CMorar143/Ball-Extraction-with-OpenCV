@@ -33,17 +33,18 @@ E = cv2.equalizeHist(Y)
 
 _, Threshold = cv2.threshold(E, 248, 255, cv2.THRESH_BINARY)
 G = cv2.cvtColor(I, cv2.COLOR_BGR2GRAY)
-G = cv2.medianBlur(G, 19)
+G = cv2.medianBlur(G, 17)
+# G = cv2.medianBlur(G, 19)
 
-circles = cv2.HoughCircles(G, cv2.HOUGH_GRADIENT, 1, 50, param1=50, param2=30, minRadius=0, maxRadius=0)
+circles = cv2.HoughCircles(G, cv2.HOUGH_GRADIENT, 1, I.shape[0], param1=50, param2=30, minRadius=0, maxRadius=0)
 
 cv2.imshow("Threshold", Threshold)
 
 detected = np.uint16(np.around(circles))
 
 for (x, y, r) in detected[0, :]:
-	cv2.circle(output, (x, y), 2, (0, 0, 255), 3)
-	cv2.circle(output, (x, y), r, (255, 0, 0), 3)
+	# cv2.circle(output, (x, y), 2, (0, 0, 255), 3)
+	cv2.circle(output, (x, y), r, (255, 255, 255), -1)
 
 # cv2.imshow("G", G)
 cv2.imshow("output", output)
