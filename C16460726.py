@@ -59,7 +59,6 @@ H, S, HV = cv2.split(HSV)
 
 
 
-
 # # Using the Contrast Limited Adaptive Histogram Equalization class to enhance the contrast
 # # Create the CLAHE object and set the clip limit and tile grid size:
 # CLAHE = cv2.createCLAHE(clipLimit = 4.5, tileGridSize = (3,3))
