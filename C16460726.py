@@ -38,16 +38,15 @@ G = cv2.medianBlur(G, 17)
 
 circles = cv2.HoughCircles(G, cv2.HOUGH_GRADIENT, 1, I.shape[0], param1=50, param2=30, minRadius=0, maxRadius=0)
 
-cv2.imshow("Threshold", Threshold)
-
 detected = np.uint16(np.around(circles))
 
 for (x, y, r) in detected[0, :]:
 	# cv2.circle(output, (x, y), 2, (0, 0, 255), 3)
-	cv2.circle(output, (x, y), r, (255, 255, 255), -1)
+	cv2.circle(Threshold, (x, y), r, (255, 255, 255), -1)
 
 # cv2.imshow("G", G)
-cv2.imshow("output", output)
+cv2.imshow("Threshold", Threshold)
+# cv2.imshow("output", output)
 cv2.waitKey(0)
 
 
