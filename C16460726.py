@@ -16,6 +16,9 @@ F = gui.fileopenbox()
 # I = cv2.imread("./Images/spottheball.jpg")
 I = cv2.imread(F)
 output = I.copy()
+h, w, d = I.shape
+
+Extracted_ball = np.zeros(shape=[h, w, 3], dtype=np.uint8)
 
 YUV = cv2.cvtColor(I, cv2.COLOR_BGR2YUV)
 Y, U, V = cv2.split(YUV)
@@ -40,13 +43,20 @@ circles = cv2.HoughCircles(G, cv2.HOUGH_GRADIENT, 1, I.shape[0], param1=50, para
 
 detected = np.uint16(np.around(circles))
 
+# Increase the radius by 3 to go beyond the circumference
 for (x, y, r) in detected[0, :]:
-	# cv2.circle(output, (x, y), 2, (0, 0, 255), 3)
-	cv2.circle(Threshold, (x, y), r, (255, 255, 255), -1)
+	# cv2.circle(output, (x, y), 2, (0, 0, 255), 1)
+	# cv2.circle(output, (x, y), r, (255, 255, 255), 1)
+	cv2.circle(Extracted_ball, (x, y), (r + 3), (255, 255, 255), -1)
+
+print(r)
+Test_extraction = cv2.subtract(output, Extracted_ball)
 
 # cv2.imshow("G", G)
-cv2.imshow("Threshold", Threshold)
-# cv2.imshow("output", output)
+# cv2.imshow("Threshold", Threshold)
+cv2.imshow("Test_extraction", Test_extraction)
+cv2.imshow("output", output)
+cv2.imshow("blank", Extracted_ball)
 cv2.waitKey(0)
 
 
