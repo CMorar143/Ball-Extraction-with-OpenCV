@@ -51,10 +51,13 @@ for (x, y, r) in detected[0, :]:
 
 print(r)
 Test_extraction = cv2.subtract(output, Extracted_ball)
+Extracted_ball = cv2.bitwise_not(Extracted_ball)
+Test_extraction2 = cv2.subtract(output, Extracted_ball)
 
 # cv2.imshow("G", G)
 # cv2.imshow("Threshold", Threshold)
 cv2.imshow("Test_extraction", Test_extraction)
+cv2.imshow("Test_extraction2", Test_extraction2)
 cv2.imshow("output", output)
 cv2.imshow("blank", Extracted_ball)
 cv2.waitKey(0)
