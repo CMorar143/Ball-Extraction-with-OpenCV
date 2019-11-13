@@ -12,13 +12,15 @@ import easygui as gui
 from matplotlib import pyplot as plt
 import numpy as np
 
-F = gui.fileopenbox()
-# I = cv2.imread("./Images/spottheball.jpg")
-I = cv2.imread(F)
+# F = gui.fileopenbox()
+I = cv2.imread("./Images/spottheball.jpg")
+# I = cv2.imread(F)
 output = I.copy()
 h, w, d = I.shape
 
 Extracted_ball = np.zeros(shape=[h, w, 3], dtype=np.uint8)
+Extracted_grass = np.zeros(shape=[h, w, 3], dtype=np.uint8)
+blank = np.zeros(shape=[h, w, 3], dtype=np.uint8)
 
 YUV = cv2.cvtColor(I, cv2.COLOR_BGR2YUV)
 Y, U, V = cv2.split(YUV)
@@ -54,14 +56,25 @@ Test_extraction = cv2.subtract(output, Extracted_ball)
 Extracted_ball = cv2.bitwise_not(Extracted_ball)
 Test_extraction2 = cv2.subtract(output, Extracted_ball)
 
-cv2.circle(Test_extraction, (x + (r*2), y), (r), (255, 255, 255), -1)
+cv2.circle(Extracted_grass, (x + (r*2), y), (r), (255, 255, 255), -1)
+
+grass_extraction = cv2.subtract(output, Extracted_grass)
+Extracted_grass = cv2.bitwise_not(Extracted_grass)
+grass_extraction2 = cv2.subtract(output, Extracted_grass)
+
+rows,cols = grass_extraction2.shape[:2]
+M = np.float32([[1,0,-r*2],[0,1,0]])
+dst = cv2.warpAffine(grass_extraction2,M,(cols,rows))
 
 # cv2.imshow("G", G)
 # cv2.imshow("Threshold", Threshold)
 cv2.imshow("Test_extraction", Test_extraction)
-cv2.imshow("Test_extraction2", Test_extraction2)
+cv2.imshow("grass_extraction", grass_extraction)
+cv2.imshow("grass_extraction2", grass_extraction2)
+# cv2.imshow("Test_extraction2", Test_extraction2)
 cv2.imshow("output", output)
-cv2.imshow("blank", Extracted_ball)
+cv2.imshow("dst", dst)
+# cv2.imshow("blank", Extracted_ball)
 cv2.waitKey(0)
 
 
