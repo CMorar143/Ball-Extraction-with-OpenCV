@@ -45,14 +45,16 @@ detected = np.uint16(np.around(circles))
 
 # Increase the radius by 3 to go beyond the circumference
 for (x, y, r) in detected[0, :]:
+	r = r + 3
 	# cv2.circle(output, (x, y), 2, (0, 0, 255), 1)
 	# cv2.circle(output, (x, y), r, (255, 255, 255), 1)
-	cv2.circle(Extracted_ball, (x, y), (r + 3), (255, 255, 255), -1)
+	cv2.circle(Extracted_ball, (x, y), (r), (255, 255, 255), -1)
 
-print(r)
 Test_extraction = cv2.subtract(output, Extracted_ball)
 Extracted_ball = cv2.bitwise_not(Extracted_ball)
 Test_extraction2 = cv2.subtract(output, Extracted_ball)
+
+cv2.circle(Test_extraction, (x + (r*2), y), (r), (255, 255, 255), -1)
 
 # cv2.imshow("G", G)
 # cv2.imshow("Threshold", Threshold)
