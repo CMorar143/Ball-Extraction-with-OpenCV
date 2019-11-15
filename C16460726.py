@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 # F = gui.fileopenbox()
-I = cv2.imread("./Images/snooker.jpg")
+I = cv2.imread("./Images/spottheball.jpg")
 # I = cv2.imread(F)	
 output = I.copy()
 h, w, d = I.shape
@@ -68,7 +68,7 @@ grass_extraction2 = cv2.subtract(output, Extracted_grass)
 cropped_grass = grass_extraction2[y-r:y+r, x+r:x+(r*3)]
 cropped_grass = cropped_grass[:,:,1]
 mean = cv2.mean(cropped_grass)
-print(mean[0])
+print("right: ", mean[0])
 
 # Extract grass from the bottom
 cv2.circle(Extracted_grassB, (x, y + (r*2)), (r), (255, 255, 255), -1)
@@ -76,10 +76,10 @@ grass_extractionB = cv2.subtract(output, Extracted_grassB)
 Extracted_grassB = cv2.bitwise_not(Extracted_grassB)
 grass_extraction2B = cv2.subtract(output, Extracted_grassB)
 # Zoom in and get average pixel value of extracted area
-cropped_grassB = grass_extraction2B[y-r:y+(r*3), x-r:x+r]
+cropped_grassB = grass_extraction2B[y+r:y+(r*3), x-r:x+r]
 cropped_grassB = cropped_grassB[:,:,1]
 meanB = cv2.mean(cropped_grassB)
-print(meanB[0])
+print("bottom: ", meanB[0])
 
 # Extract grass from the left hand side
 cv2.circle(Extracted_grassL, (x - (r*2), y), (r), (255, 255, 255), -1)
@@ -87,10 +87,10 @@ grass_extractionL = cv2.subtract(output, Extracted_grassL)
 Extracted_grassL = cv2.bitwise_not(Extracted_grassL)
 grass_extraction2L = cv2.subtract(output, Extracted_grassL)
 # Zoom in and get average pixel value of extracted area
-cropped_grassL = grass_extraction2L[y-r:y+r, x-(r*3):x+r]
+cropped_grassL = grass_extraction2L[y-r:y+r, x-(r*3):x-r]
 cropped_grassL = cropped_grassL[:,:,1]
 meanL = cv2.mean(cropped_grassL)
-print(meanL[0])
+print("left: ", meanL[0])
 
 # Extract grass from the top
 cv2.circle(Extracted_grassT, (x, y - (r*2)), (r), (255, 255, 255), -1)
@@ -98,10 +98,10 @@ grass_extractionT = cv2.subtract(output, Extracted_grassT)
 Extracted_grassT = cv2.bitwise_not(Extracted_grassT)
 grass_extraction2T = cv2.subtract(output, Extracted_grassT)
 # Zoom in and get average pixel value of extracted area
-cropped_grassT = grass_extraction2T[y-(r*3):y+r, x-r:x+r]
+cropped_grassT = grass_extraction2T[y-(r*3):y-r, x-r:x+r]
 cropped_grassT = cropped_grassT[:,:,1]
 meanT = cv2.mean(cropped_grassT)
-print(meanT[0])
+print("top: ", meanT[0])
 
 
 
