@@ -13,13 +13,16 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 # F = gui.fileopenbox()
-I = cv2.imread("./Images/spottheball.jpg")
-# I = cv2.imread(F)
+I = cv2.imread("./Images/snooker.jpg")
+# I = cv2.imread(F)	
 output = I.copy()
 h, w, d = I.shape
 
 Extracted_ball = np.zeros(shape=[h, w, 3], dtype=np.uint8)
 Extracted_grass = np.zeros(shape=[h, w, 3], dtype=np.uint8)
+Extracted_grassB = Extracted_grass.copy()
+Extracted_grassL = Extracted_grass.copy()
+Extracted_grassT = Extracted_grass.copy()
 blank = np.zeros(shape=[h, w, 3], dtype=np.uint8)
 
 YUV = cv2.cvtColor(I, cv2.COLOR_BGR2YUV)
@@ -47,7 +50,7 @@ detected = np.uint16(np.around(circles))
 
 # Increase the radius by 3 to go beyond the circumference
 for (x, y, r) in detected[0, :]:
-	r = r + 3
+	r = r + 10
 	# cv2.circle(output, (x, y), 2, (0, 0, 255), 1)
 	# cv2.circle(output, (x, y), r, (255, 255, 255), 1)
 	cv2.circle(Extracted_ball, (x, y), (r), (255, 255, 255), -1)
@@ -56,25 +59,79 @@ Test_extraction = cv2.subtract(output, Extracted_ball)
 Extracted_ball = cv2.bitwise_not(Extracted_ball)
 Test_extraction2 = cv2.subtract(output, Extracted_ball)
 
+# Extract grass from the right hand side
 cv2.circle(Extracted_grass, (x + (r*2), y), (r), (255, 255, 255), -1)
-
 grass_extraction = cv2.subtract(output, Extracted_grass)
 Extracted_grass = cv2.bitwise_not(Extracted_grass)
 grass_extraction2 = cv2.subtract(output, Extracted_grass)
+# Zoom in and get average pixel value of extracted area
+cropped_grass = grass_extraction2[y-r:y+r, x+r:x+(r*3)]
+cropped_grass = cropped_grass[:,:,1]
+mean = cv2.mean(cropped_grass)
+print(mean[0])
+
+# Extract grass from the bottom
+cv2.circle(Extracted_grassB, (x, y + (r*2)), (r), (255, 255, 255), -1)
+grass_extractionB = cv2.subtract(output, Extracted_grassB)
+Extracted_grassB = cv2.bitwise_not(Extracted_grassB)
+grass_extraction2B = cv2.subtract(output, Extracted_grassB)
+# Zoom in and get average pixel value of extracted area
+cropped_grassB = grass_extraction2B[y-r:y+(r*3), x-r:x+r]
+cropped_grassB = cropped_grassB[:,:,1]
+meanB = cv2.mean(cropped_grassB)
+print(meanB[0])
+
+# Extract grass from the left hand side
+cv2.circle(Extracted_grassL, (x - (r*2), y), (r), (255, 255, 255), -1)
+grass_extractionL = cv2.subtract(output, Extracted_grassL)
+Extracted_grassL = cv2.bitwise_not(Extracted_grassL)
+grass_extraction2L = cv2.subtract(output, Extracted_grassL)
+# Zoom in and get average pixel value of extracted area
+cropped_grassL = grass_extraction2L[y-r:y+r, x-(r*3):x+r]
+cropped_grassL = cropped_grassL[:,:,1]
+meanL = cv2.mean(cropped_grassL)
+print(meanL[0])
+
+# Extract grass from the top
+cv2.circle(Extracted_grassT, (x, y - (r*2)), (r), (255, 255, 255), -1)
+grass_extractionT = cv2.subtract(output, Extracted_grassT)
+Extracted_grassT = cv2.bitwise_not(Extracted_grassT)
+grass_extraction2T = cv2.subtract(output, Extracted_grassT)
+# Zoom in and get average pixel value of extracted area
+cropped_grassT = grass_extraction2T[y-(r*3):y+r, x-r:x+r]
+cropped_grassT = cropped_grassT[:,:,1]
+meanT = cv2.mean(cropped_grassT)
+print(meanT[0])
+
+
+
+
 
 rows,cols = grass_extraction2.shape[:2]
 M = np.float32([[1,0,-r*2],[0,1,0]])
 dst = cv2.warpAffine(grass_extraction2,M,(cols,rows))
 
+dst = cv2.bitwise_or(dst, Test_extraction)
+
+
 # cv2.imshow("G", G)
 # cv2.imshow("Threshold", Threshold)
-cv2.imshow("Test_extraction", Test_extraction)
-cv2.imshow("grass_extraction", grass_extraction)
+# cv2.imshow("Test_extraction", Test_extraction)
+
+# cv2.imshow("grass_extraction", grass_extraction)
 cv2.imshow("grass_extraction2", grass_extraction2)
+cv2.imshow("grass_extraction2B", grass_extraction2B)
+cv2.imshow("grass_extraction2L", grass_extraction2L)
+cv2.imshow("grass_extraction2T", grass_extraction2T)
 # cv2.imshow("Test_extraction2", Test_extraction2)
-cv2.imshow("output", output)
-cv2.imshow("dst", dst)
-# cv2.imshow("blank", Extracted_ball)
+# cv2.imshow("output", output)
+# cv2.imshow("dst", dst)
+cv2.imshow("cropped_grass", cropped_grass)
+cv2.imshow("cropped_grassB", cropped_grassB)
+cv2.imshow("cropped_grassL", cropped_grassL)
+cv2.imshow("cropped_grassT", cropped_grassT)
+# cv2.imshow("Extracted_ball", Extracted_ball)
+# cv2.imshow("Extracted_grass", Extracted_grass)
 cv2.waitKey(0)
 
 
