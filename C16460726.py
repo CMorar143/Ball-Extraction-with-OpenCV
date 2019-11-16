@@ -40,7 +40,7 @@ def FillEmptySpot(rx, ry, grass_extraction):
 
 
 # F = gui.fileopenbox()
-I = cv2.imread("./Images/spottheball.jpg")
+I = cv2.imread("./Images/golf.jpg")
 # I = cv2.imread(F)	
 output = I.copy()
 h, w, d = I.shape
@@ -69,7 +69,6 @@ E = cv2.equalizeHist(Y)
 _, Threshold = cv2.threshold(E, 248, 255, cv2.THRESH_BINARY)
 G = cv2.cvtColor(I, cv2.COLOR_BGR2GRAY)
 G = cv2.medianBlur(G, 17)
-# G = cv2.medianBlur(G, 19)
 
 circles = cv2.HoughCircles(G, cv2.HOUGH_GRADIENT, 1, I.shape[0], param1=50, param2=30, minRadius=0, maxRadius=0)
 
@@ -78,8 +77,6 @@ detected = np.uint16(np.around(circles))
 # Increase the radius by 3 to go beyond the circumference
 for (x, y, r) in detected[0, :]:
 	r = r + 10
-	# cv2.circle(output, (x, y), 2, (0, 0, 255), 1)
-	# cv2.circle(output, (x, y), r, (255, 255, 255), 1)
 	cv2.circle(Extracted_ball, (x, y), (r), (255, 255, 255), -1)
 
 Test_extraction = cv2.subtract(output, Extracted_ball)
@@ -102,7 +99,21 @@ print("left: ", meanLeft)
 meanTop, grass_extraction2T = FindGrass(x, y - (r*2), y-(r*3), y-r, x-r, x+r)
 print("top: ", meanTop)
 
-dst = FillEmptySpot(0, -r*2, grass_extraction2B)
+# Find which sidehas the highest amount of green
+means = (meanRight, meanBottom, meanLeft, meanTop)
+highestMean = max(means)
+
+if meanRight == highestMean:
+	dst = FillEmptySpot(-r*2, 0, grass_extraction2)
+
+if meanBottom == highestMean:
+	dst = FillEmptySpot(0, -r*2, grass_extraction2B)
+
+if meanLeft == highestMean:
+	dst = FillEmptySpot(r*2, 0, grass_extraction2L)
+
+if meanTop == highestMean:
+	dst = FillEmptySpot(0, r*2, grass_extraction2T)
 
 
 # cv2.imshow("G", G)
@@ -160,53 +171,3 @@ ax6.hist(Enhanced_Y.ravel(), bins=256, range=[0,256])
 # plt.show()
 # cv2.waitKey(0)
 # plt.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Using the Contrast Limited Adaptive Histogram Equalization class to enhance the contrast
-# # Create the CLAHE object and set the clip limit and tile grid size:
-# CLAHE = cv2.createCLAHE(clipLimit = 4.5, tileGridSize = (3,3))
-
-# # This improves definition in the image:
-# Enhanced_Y = CLAHE.apply(Y)
-
-# # This is used to remove the background:
-# Enhanced_U = CLAHE.apply(U)
-
-# # Create initial mask to remove the background:
-# _, Threshold = cv2.threshold(Enhanced_U, 176, 255, cv2.THRESH_TRUNC)
-# Adaptive_Threshold = cv2.adaptiveThreshold(Threshold, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 275, 2)
-
-# Enchanced_YUV = cv2.merge((Enhanced_Y,U,V))
-# Enchanced_BGR = cv2.cvtColor(Enchanced_YUV, cv2.COLOR_YUV2BGR)
-# Enchanced_B, Enchanced_G, Enchanced_R = cv2.split(Enchanced_BGR)
-
-# Removed_Background = ApplyMask(Adaptive_Threshold)
-
-# # Create the final mask to clean more of the noise:
-# Enhanced_YUV2 = cv2.cvtColor(Removed_Background, cv2.COLOR_BGR2YUV)
-# u = Enhanced_YUV2[:,:,1]
-
-# _, maxVal, _, _ = cv2.minMaxLoc(u)
-# masked_range = cv2.inRange(u, 0, maxVal-3)
-# final_mask = cv2.bitwise_xor(masked_range, Adaptive_Threshold)
-# final_mask = cv2.bitwise_not(final_mask)
-
-# final_image = ApplyMask(final_mask)
-
-# cv2.imwrite("./final_image.png", final_image)
