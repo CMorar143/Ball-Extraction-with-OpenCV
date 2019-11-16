@@ -32,25 +32,18 @@ def FillEmptySpot(rx, ry, grass_extraction):
 	rows,cols = grass_extraction.shape[:2]
 	M = np.float32([[1,0,rx],[0,1,ry]])
 	dst = cv2.warpAffine(grass_extraction,M,(cols,rows))
-
 	dst = cv2.bitwise_or(dst, Test_extraction)
 
 	return dst
 
 
-
 # F = gui.fileopenbox()
-I = cv2.imread("./Images/golf.jpg")
-# I = cv2.imread(F)	
+I = cv2.imread("./Images/spottheball.jpg")
+# I = cv2.imread(F)
 output = I.copy()
 h, w, d = I.shape
 
 Extracted_ball = np.zeros(shape=[h, w, 3], dtype=np.uint8)
-Extracted_grass = np.zeros(shape=[h, w, 3], dtype=np.uint8)
-Extracted_grassB = Extracted_grass.copy()
-Extracted_grassL = Extracted_grass.copy()
-Extracted_grassT = Extracted_grass.copy()
-blank = np.zeros(shape=[h, w, 3], dtype=np.uint8)
 
 YUV = cv2.cvtColor(I, cv2.COLOR_BGR2YUV)
 Y, U, V = cv2.split(YUV)
