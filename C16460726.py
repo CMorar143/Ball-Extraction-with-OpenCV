@@ -28,6 +28,16 @@ def FindGrass(xCircle, yCircle, yStart, yFinish, xStart, xFinish):
 
 	return mean[0], grass_extraction2
 
+def FillEmptySpot(rx, ry, grass_extraction):
+	rows,cols = grass_extraction.shape[:2]
+	M = np.float32([[1,0,rx],[0,1,ry]])
+	dst = cv2.warpAffine(grass_extraction,M,(cols,rows))
+
+	dst = cv2.bitwise_or(dst, Test_extraction)
+
+	return dst
+
+
 
 # F = gui.fileopenbox()
 I = cv2.imread("./Images/spottheball.jpg")
@@ -80,54 +90,19 @@ Test_extraction2 = cv2.subtract(output, Extracted_ball)
 meanRight, grass_extraction2 = FindGrass(x + (r*2), y, y-r, y+r, x+r, x + (r*3))
 print("right: ", meanRight)
 
-# rows,cols = grass_extraction2.shape[:2]
-# M = np.float32([[1,0,-r*2],[0,1,0]])
-# dst = cv2.warpAffine(grass_extraction2,M,(cols,rows))
-# dst = cv2.bitwise_or(dst, Test_extraction)
-
 # Extract grass from the bottom
-cv2.circle(Extracted_grassB, (x, y + (r*2)), (r), (255, 255, 255), -1)
-grass_extractionB = cv2.subtract(output, Extracted_grassB)
-Extracted_grassB = cv2.bitwise_not(Extracted_grassB)
-grass_extraction2B = cv2.subtract(output, Extracted_grassB)
-# Zoom in and get average pixel value of extracted area
-cropped_grassB = grass_extraction2B[y+r:y+(r*3), x-r:x+r]
-cropped_grassB = cropped_grassB[:,:,1]
-meanB = cv2.mean(cropped_grassB)
-print("bottom: ", meanB[0])
+meanBottom, grass_extraction2B = FindGrass(x, y + (r*2), y+r, y+(r*3), x-r, x+r)
+print("bottom: ", meanBottom)
 
 # Extract grass from the left hand side
-cv2.circle(Extracted_grassL, (x - (r*2), y), (r), (255, 255, 255), -1)
-grass_extractionL = cv2.subtract(output, Extracted_grassL)
-Extracted_grassL = cv2.bitwise_not(Extracted_grassL)
-grass_extraction2L = cv2.subtract(output, Extracted_grassL)
-# Zoom in and get average pixel value of extracted area
-cropped_grassL = grass_extraction2L[y-r:y+r, x-(r*3):x-r]
-cropped_grassL = cropped_grassL[:,:,1]
-meanL = cv2.mean(cropped_grassL)
-print("left: ", meanL[0])
+meanLeft, grass_extraction2L = FindGrass(x - (r*2), y, y-r, y+r, x-(r*3), x-r)
+print("left: ", meanLeft)
 
 # Extract grass from the top
-cv2.circle(Extracted_grassT, (x, y - (r*2)), (r), (255, 255, 255), -1)
-grass_extractionT = cv2.subtract(output, Extracted_grassT)
-Extracted_grassT = cv2.bitwise_not(Extracted_grassT)
-grass_extraction2T = cv2.subtract(output, Extracted_grassT)
-# Zoom in and get average pixel value of extracted area
-cropped_grassT = grass_extraction2T[y-(r*3):y-r, x-r:x+r]
-cropped_grassT = cropped_grassT[:,:,1]
-meanT = cv2.mean(cropped_grassT)
-print("top: ", meanT[0])
+meanTop, grass_extraction2T = FindGrass(x, y - (r*2), y-(r*3), y-r, x-r, x+r)
+print("top: ", meanTop)
 
-
-
-
-rx = 0
-ry = -r*2
-rows,cols = grass_extraction2.shape[:2]
-M = np.float32([[1,0,rx],[0,1,ry]])
-dst = cv2.warpAffine(grass_extraction2B,M,(cols,rows))
-
-dst = cv2.bitwise_or(dst, Test_extraction)
+dst = FillEmptySpot(0, -r*2, grass_extraction2B)
 
 
 # cv2.imshow("G", G)
