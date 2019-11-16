@@ -41,7 +41,6 @@ def FillEmptySpot(rx, ry, grass_extraction):
 
 	return dst
 
-# def main():
 # Repeat until the user chooses to exit:
 while (1):
 	gui.msgbox(opening_message + instructions, "Hello!")
@@ -107,5 +106,3 @@ while (1):
 	if reply == 'No' or reply != 'Yes':
 		gui.msgbox(final_message, title = "Thanks!")
 		exit(0)
-
-# main()
