@@ -1,16 +1,16 @@
                ############## OPENING COMMENT ##############
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Program to Detect and Extract a White Ball From an Image.					  #
+# Program to Detect and Remove a White Ball From an Image					  #
 # Author: Cian Morar 														  #
-# Date:  2019																  #
+# Date: November 2019														  #
 #																			  #
 # The algorithm works as follows:											  #
 #																			  #
 # The user selects an image.												  #
 #																			  #
 # The circle hough transform method is used.								  #
-# This works by first blurring the image and then using the HoughCircles	  #
-# method to detect the circle in the image.									  #
+# This works by first blurring a greyscale of the image and then using the 	  #
+# HoughCircles method to detect the circle in the image.					  #
 # 																			  #
 # The circle hough transform will return the x and y co-ordinates for the 	  #
 # the centre of the circle and the radius of the cirlce.					  #
