@@ -143,4 +143,10 @@ while (1):
 # This translation method works better than blurring for both the 		  	  #
 # football and golf images.													  #
 # 																			  #
+# Additionaly, I have tested this script on other similar images and they  	  #
+# provide equally satisfying results.										  #
+# 																			  #
+# I will say however, that it works best on images most like the golf image	  #
+# i.e. when the grass is slightly more detailed								  #
+# 																			  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
